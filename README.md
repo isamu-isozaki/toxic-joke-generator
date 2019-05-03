@@ -38,3 +38,9 @@ then the last cell will start generating some vile jokes!
 - They say women don't like a man with everything.......So I went around the block with my throat pressed to see if that was the flirting I was after.
 
 - My girlfriend told me to get something that makes her look HOT.....So I went home with a DIY candle and rubbed white alcohol all over it, and she burned her fingers.  I swear that exact spot is on my burner
+# Thanks
+I'll give my sincerest thanks to 
+https://www.reddit.com/r/MachineLearning/comments/bgvzdu/d_jokes_generated_via_gpt2/ for teaching me the basics of how to fine tune the model and fix encoding errors as well as the two repositories above.
+https://github.com/taivop/joke-dataset
+and 
+https://github.com/nshepperd/gpt-2/tree/finetuning
