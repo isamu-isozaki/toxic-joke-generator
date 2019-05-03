@@ -24,6 +24,12 @@ python encode.py jokes.txt jokes.txt.npz
 ~~~
 - The trained models will then be saved to autoencoder1
 - The training can be resumed even if disconnected by running the notebook again as it downloads the models from google drive automatically.
+# How to see results
+- When executing the colab notebook, execute everything except
+~~~
+!python ./train.py --dataset jokes.txt.npz --batch_size 2 --sample_every 100 --save_every 1000 --folder_id $folder_id
+~~~
+then the last cell will start generating some vile jokes!
 # Sample jokes(Reader discretion advised!)
 - Why are cemeteries surrounded by walls?....Because people are dying to get in there.
 
