@@ -1,5 +1,6 @@
 # toxic-joke-generator
-I fine-tuned the 117M GPT-2 model with jokes from https://github.com/taivop/joke-dataset
+The toxic joke generator is a model that generates jokes. The reason that it is toxic is because it tends to output offensive jokes because the dataset it was trained on.
+I fine-tuned the 117M GPT-2 model with jokes from https://github.com/taivop/joke-dataset. By finetuned I mean I trained the pretrained 117M GPT-2 model with additional data from  https://github.com/taivop/joke-dataset which lead it to generate jokes. Be warned, these jokes are quite dark!
 # How to get up and running
 - Clone this repository
 - Clone https://github.com/taivop/joke-dataset and  https://github.com/nshepperd/gpt-2/tree/finetuning by going on the command line and typing
