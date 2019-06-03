@@ -2,12 +2,7 @@
 The toxic joke generator is a model that generates jokes. The reason that it is toxic is because it tends to output offensive jokes because the dataset it was trained on.
 I fine-tuned the 117M GPT-2 model with jokes from https://github.com/taivop/joke-dataset. By finetuned I mean I trained the pretrained 117M GPT-2 model with additional data from  https://github.com/taivop/joke-dataset which lead it to generate jokes. Be warned, these jokes are quite dark!
 # How to get up and running
-- Clone this repository
-- Run
-~~~
-python download_model.py 117M
-~~~
-- Zip this repository and upload it to google drive with the name gpt-2.zip and create an empty folder in google drive named "autoencoder1"
+- create an empty folder in google drive named "autoencoder1"
 - Run the colaboratory script up to and including 
 ~~~
 !python ./train.py --dataset jokes_200_2_3.0_1.txt.npz --batch_size 2 --sample_every 100 --save_every 1000 --folder_id $folder_id
