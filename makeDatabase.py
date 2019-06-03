@@ -1,6 +1,5 @@
 #Thanks Sentdex
 import json
-import datetime as datetime
 from tqdm import tqdm
 import re
 import argparse
