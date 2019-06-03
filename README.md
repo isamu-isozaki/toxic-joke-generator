@@ -35,9 +35,9 @@ then the last cell will start generating some vile jokes!
 - Download csvs from [here](https://www.kaggle.com/cuddlefish/reddit-rjokes) and [here](https://www.kaggle.com/bfinan/jokes-question-and-answer) and include the jokes_score_name_clean.csv and qajokes1.1.2.csv into the joke-dataset directory with jokes.csv from this repository. The jokes.csv came from modifying [this repository's code](https://github.com/amoudgl/short-jokes-dataset) so that it's not just short jokes.
 - Put makeDatabase.py into joke-database folder and run it by
 ~~~
-python makeDatabase.py
+python makeDatabase.py --joke_length=200
 ~~~
-- This will create a database called Jokes.db and a text file called jokes.txt
+- This will create a text file called jokes_200_3_3.0_1.txt
 - Put jokes.txt into the gpt-2 folder. Put the contents of the src folder into the gpt-2 folder directly and run the following in the gpt-2 folder
 ~~~
 python encode.py jokes.txt jokes.txt.npz
