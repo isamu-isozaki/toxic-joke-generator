@@ -32,6 +32,7 @@ then the last cell will start generating some vile jokes!
 
 - My girlfriend told me to get something that makes her look HOT.....So I went home with a DIY candle and rubbed white alcohol all over it, and she burned her fingers.  I swear that exact spot is on my burner
 # How data was gathered
+- All the data is in the repository for anybody who wants to work with the original datasets.
 - Download csvs from [here](https://www.kaggle.com/cuddlefish/reddit-rjokes) and [here](https://www.kaggle.com/bfinan/jokes-question-and-answer) and include the jokes_score_name_clean.csv and qajokes1.1.2.csv into the joke-dataset directory with jokes.csv from this repository. The jokes.csv came from modifying [this repository's code](https://github.com/amoudgl/short-jokes-dataset) so that it's not just short jokes.
 - Put makeDatabase.py into joke-database folder and run it by
 ~~~
