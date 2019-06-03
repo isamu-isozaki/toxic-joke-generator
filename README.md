@@ -8,6 +8,7 @@ I fine-tuned the 117M GPT-2 model with jokes from https://github.com/taivop/joke
 git clone https://github.com/taivop/joke-dataset.git
 git clone https://github.com/nshepperd/gpt-2.git
 ~~~
+- Download csvs from [here](https://www.kaggle.com/cuddlefish/reddit-rjokes) and [here](https://www.kaggle.com/bfinan/jokes-question-and-answer) and include the jokes_score_name_clean.csv and qajokes1.1.2.csv into the joke-dataset directory with jokes.csv from this repository. The jokes.csv came from modifying [this repository's code](https://github.com/amoudgl/short-jokes-dataset) so that it's not just short jokes.
 - Put makeDatabase.py into joke-database folder and run it by
 ~~~
 python makeDatabase.py
