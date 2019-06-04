@@ -57,6 +57,7 @@ def maketree(path):
 		pass
 fl = None
 def main():
+	global fl
 	args = parser.parse_args()
 	from pydrive.auth import GoogleAuth
 	from pydrive.drive import GoogleDrive
