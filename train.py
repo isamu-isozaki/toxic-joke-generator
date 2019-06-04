@@ -32,7 +32,8 @@ parser = argparse.ArgumentParser(
 	formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument('--dataset', metavar='PATH', type=str, required=True, help='Input file, directory, or glob pattern (utf-8 text, or preencoded .npz files).')
-parser.add_argument('--folder_id', type=str, help='The id of the folder in google drive to save to. The name of the folder is autoencoder1')
+parser.add_argument('--model_folder_name', metavar='MODELFOL', type=str, default='model', help='Model folder name in google drive')
+parser.add_argument('--past_model_folder_name', metavar='PASTMODELFOL', type=str, default='past', help='Folder name where past models go in google drive')
 parser.add_argument('--model_name', metavar='MODEL', type=str, default='117M', help='Pretrained model name')
 parser.add_argument('--combine', metavar='CHARS', type=int, default=50000, help='Concatenate input files with <|endoftext|> separator into chunks of this minimum size')
 
@@ -54,8 +55,33 @@ def maketree(path):
 		os.makedirs(path)
 	except:
 		pass
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
 
+# 1. Authenticate and create the PyDrive client.
+auth.authenticate_user()
+gauth = GoogleAuth()
+gauth.credentials = GoogleCredentials.get_application_default()
+drive = GoogleDrive(gauth)
 
+def ListFolder(parent, show=False):
+  filelist=[]
+  file_list = drive.ListFile({'q': "'%s' in parents and trashed=false" % parent}).GetList()
+  for f in file_list:
+    if show:
+      print(f"{f['title']}, {f['id']}")
+    if f['mimeType']=='application/vnd.google-apps.folder': # if folder
+        if f['title'] == folder_name or f['title'] == past_folder_name:
+          filelist.append({"id":f['id'],"title":f['title'], "mimeType": 'application/vnd.google-apps.folder', "list":ListFolder(f['id'])})
+        else:
+          for f1 in ListFolder(f['id']):
+            filelist.append(f1)
+    else:
+        filelist.append({"id":f['id'],"title":f['title'],"mimeType":"file","title1":f['alternateLink']})
+  return filelist
+fl = ListFolder("root")
 def main():
 	args = parser.parse_args()
 	enc = encoder.get_encoder(args.model_name)
@@ -136,8 +162,18 @@ def main():
 			# Add 1 so we don't immediately try to save again
 			with open(counter_path, 'r') as fp:
 				counter = int(fp.read()) + 1
-
+		def get_folder_id(name):
+			global fl
+			for i in fl:
+				if i["name"] == name:
+					return i['id']
+		def get_children(name):
+			global fl
+			for i in fl:
+				if i["name"] == name:
+					return i.get("list", [])
 		def save():
+			global fl
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
 				if content[0] != "e":#summary file
 					os.remove(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
@@ -157,15 +193,27 @@ def main():
 			from google.colab import auth
 			from oauth2client.client import GoogleCredentials
 
-			# 1. Authenticate and create the PyDrive client.
+			# 1. Authenticate and create the PyDrive client do this every time because sometimes the client.json just dissapears.
 			auth.authenticate_user()
 			gauth = GoogleAuth()
 			gauth.credentials = GoogleCredentials.get_application_default()
 			drive = GoogleDrive(gauth)
+			#Delete folders from model_folder_name
+			for file in get_children(args.model_folder_name):
+				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": file["id"]}]})
+				f.Delete()
+			#Upload to model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
-				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": args.folder_id}]})
+				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.model_folder_name)}]})
 				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
 				f.Upload()
+			#Upload to past_model_folder_name
+			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
+				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.past_model_folder_name)}]})
+				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
+				f.Upload()
+			#update folder list
+			fl = ListFolder("root")
 
 		def generate_samples():
 			context_tokens = data_sampler.sample(1)

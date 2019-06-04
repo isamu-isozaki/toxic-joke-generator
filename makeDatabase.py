@@ -1,6 +1,5 @@
 #Thanks Sentdex
 import json
-import datetime as datetime
 from tqdm import tqdm
 import re
 import argparse
@@ -93,5 +92,6 @@ if __name__ == "__main__":
 		try:
 			with open(text_file_name, "a+") as f:
 				f.write(text)
-		except:
+		except Exception as e:
+			print(e)
 			pass
