@@ -55,35 +55,36 @@ def maketree(path):
 		os.makedirs(path)
 	except:
 		pass
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
-from google.colab import auth
-from oauth2client.client import GoogleCredentials
 
-# 1. Authenticate and create the PyDrive client.
-auth.authenticate_user()
-gauth = GoogleAuth()
-gauth.credentials = GoogleCredentials.get_application_default()
-drive = GoogleDrive(gauth)
-
-def ListFolder(parent, show=False):
-  filelist=[]
-  file_list = drive.ListFile({'q': "'%s' in parents and trashed=false" % parent}).GetList()
-  for f in file_list:
-    if show:
-      print(f"{f['title']}, {f['id']}")
-    if f['mimeType']=='application/vnd.google-apps.folder': # if folder
-        if f['title'] == folder_name or f['title'] == past_folder_name:
-          filelist.append({"id":f['id'],"title":f['title'], "mimeType": 'application/vnd.google-apps.folder', "list":ListFolder(f['id'])})
-        else:
-          for f1 in ListFolder(f['id']):
-            filelist.append(f1)
-    else:
-        filelist.append({"id":f['id'],"title":f['title'],"mimeType":"file","title1":f['alternateLink']})
-  return filelist
-fl = ListFolder("root")
 def main():
 	args = parser.parse_args()
+	from pydrive.auth import GoogleAuth
+	from pydrive.drive import GoogleDrive
+	from google.colab import auth
+	from oauth2client.client import GoogleCredentials
+
+	# 1. Authenticate and create the PyDrive client.
+	auth.authenticate_user()
+	gauth = GoogleAuth()
+	gauth.credentials = GoogleCredentials.get_application_default()
+	drive = GoogleDrive(gauth)
+
+	def ListFolder(parent, show=False):
+	  filelist=[]
+	  file_list = drive.ListFile({'q': "'%s' in parents and trashed=false" % parent}).GetList()
+	  for f in file_list:
+	    if show:
+	      print(f"{f['title']}, {f['id']}")
+	    if f['mimeType']=='application/vnd.google-apps.folder': # if folder
+	        if f['title'] == args.model_folder_name or f['title'] == args.past_model_folder_name:
+	          filelist.append({"id":f['id'],"title":f['title'], "mimeType": 'application/vnd.google-apps.folder', "list":ListFolder(f['id'])})
+	        else:
+	          for f1 in ListFolder(f['id']):
+	            filelist.append(f1)
+	    else:
+	        filelist.append({"id":f['id'],"title":f['title'],"mimeType":"file","title1":f['alternateLink']})
+	  return filelist
+	fl = ListFolder("root")
 	enc = encoder.get_encoder(args.model_name)
 	hparams = model.default_hparams()
 	with open(os.path.join('models', args.model_name, 'hparams.json')) as f:
@@ -165,12 +166,12 @@ def main():
 		def get_folder_id(name):
 			global fl
 			for i in fl:
-				if i["name"] == name:
+				if i["title"] == name:
 					return i['id']
 		def get_children(name):
 			global fl
 			for i in fl:
-				if i["name"] == name:
+				if i["title"] == name:
 					return i.get("list", [])
 		def save():
 			global fl
