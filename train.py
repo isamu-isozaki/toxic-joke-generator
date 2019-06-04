@@ -197,17 +197,20 @@ def main():
 			get_client_json()
 			#Delete folders from model_folder_name
 			for file in get_children(args.model_folder_name):
+				get_client_json()
 				f = drive.CreateFile({"id": file["id"]})
 				f.Delete()
 			get_client_json()
 			#Upload to model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
+				get_client_json()
 				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.model_folder_name)}]})
 				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
 				f.Upload()
 			get_client_json()
 			#Upload to past_model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
+				get_client_json()
 				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.past_model_folder_name)}]})
 				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
 				f.Upload()
