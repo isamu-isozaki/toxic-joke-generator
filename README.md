@@ -1,13 +1,15 @@
+# Apologies
+Sorry for the horrible file structure! I'll make sure to fix it.
 # toxic-joke-generator
 The toxic joke generator is a model that generates jokes. The reason that it is toxic is because it tends to output offensive jokes because the dataset it was trained on.
 I fine-tuned the 117M GPT-2 model with jokes from https://github.com/taivop/joke-dataset. By finetuned I mean I trained the pretrained 117M GPT-2 model with additional data from  https://github.com/taivop/joke-dataset which lead it to generate jokes. Be warned, these jokes are quite dark!
 # How to get up and running
-- Create an empty folder in google drive named "autoencoder1"
+- Create an empty folder in google drive named "model" and "past" to past, all the previous models including the current model will get saved and to model only the current model will be saved
 - Run the colaboratory script up to and including 
 ~~~
-!python ./train.py --dataset jokes_200_2_3.0_1.txt.npz --batch_size 2 --sample_every 100 --save_every 1000 --folder_id $folder_id
+!python ./train.py --dataset jokes_400_2_3.0_1.txt.npz --batch_size 2 --sample_every 100 --save_every 1000 \
+--model_folder_name $model_folder_name --past_model_folder_name $past_folder_name
 ~~~
-- The trained models will then be saved to autoencoder1
 - The training can be resumed even if disconnected by running the notebook again as it downloads the models from google drive automatically.
 # Explanation of filename
 The data was created from makeDatabase.py given the name jokes_200_2_3.0_1.txt.npz
