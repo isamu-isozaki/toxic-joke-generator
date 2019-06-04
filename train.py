@@ -203,7 +203,7 @@ def main():
 			drive = GoogleDrive(gauth)
 			#Delete folders from model_folder_name
 			for file in get_children(args.model_folder_name):
-				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": file["id"]}]})
+				f = drive.CreateFile({"id": file["id"]})
 				f.Delete()
 			#Upload to model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
