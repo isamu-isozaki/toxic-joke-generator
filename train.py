@@ -59,16 +59,19 @@ fl = None
 def main():
 	global fl
 	args = parser.parse_args()
-	from pydrive.auth import GoogleAuth
-	from pydrive.drive import GoogleDrive
-	from google.colab import auth
-	from oauth2client.client import GoogleCredentials
 
-	# 1. Authenticate and create the PyDrive client.
-	auth.authenticate_user()
-	gauth = GoogleAuth()
-	gauth.credentials = GoogleCredentials.get_application_default()
-	drive = GoogleDrive(gauth)
+	def get_client_json():
+
+		from pydrive.auth import GoogleAuth
+		from pydrive.drive import GoogleDrive
+		from google.colab import auth
+		from oauth2client.client import GoogleCredentials
+		# 1. Authenticate and create the PyDrive client.
+		auth.authenticate_user()
+		gauth = GoogleAuth()
+		gauth.credentials = GoogleCredentials.get_application_default()
+		drive = GoogleDrive(gauth)
+	get_client_json()
 
 	def ListFolder(parent, show=False):
 	  filelist=[]
@@ -191,30 +194,24 @@ def main():
 				global_step=counter)
 			with open(counter_path, 'w') as fp:
 				fp.write(str(counter) + '\n')
-			from pydrive.auth import GoogleAuth
-			from pydrive.drive import GoogleDrive
-			from google.colab import auth
-			from oauth2client.client import GoogleCredentials
-
-			# 1. Authenticate and create the PyDrive client do this every time because sometimes the client.json just dissapears.
-			auth.authenticate_user()
-			gauth = GoogleAuth()
-			gauth.credentials = GoogleCredentials.get_application_default()
-			drive = GoogleDrive(gauth)
+			get_client_json()
 			#Delete folders from model_folder_name
 			for file in get_children(args.model_folder_name):
 				f = drive.CreateFile({"id": file["id"]})
 				f.Delete()
+			get_client_json()
 			#Upload to model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
 				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.model_folder_name)}]})
 				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
 				f.Upload()
+			get_client_json()
 			#Upload to past_model_folder_name
 			for content in os.listdir(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)):
 				f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": get_folder_id(args.past_model_folder_name)}]})
 				f.SetContentFile(os.path.join(f"./{CHECKPOINT_DIR}", args.run_name)+"/"+content)
 				f.Upload()
+			get_client_json()
 			#update folder list
 			fl = ListFolder("root")
 
@@ -247,6 +244,7 @@ def main():
 
 		try:
 			while True:
+				get_client_json()
 				if counter % args.save_every == 0:
 					save()
 				if counter % args.sample_every == 0:
