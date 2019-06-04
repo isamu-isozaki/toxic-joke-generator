@@ -55,7 +55,7 @@ def maketree(path):
 		os.makedirs(path)
 	except:
 		pass
-
+fl = None
 def main():
 	args = parser.parse_args()
 	from pydrive.auth import GoogleAuth
@@ -84,6 +84,7 @@ def main():
 	    else:
 	        filelist.append({"id":f['id'],"title":f['title'],"mimeType":"file","title1":f['alternateLink']})
 	  return filelist
+	print("Get folder list from google drive")
 	fl = ListFolder("root")
 	enc = encoder.get_encoder(args.model_name)
 	hparams = model.default_hparams()
